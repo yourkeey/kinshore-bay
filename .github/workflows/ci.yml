@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Django, Telegram bot, and guest browser
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_PASSWORD: kinshore-ci-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            crm/requirements.txt
+            requirements-dev.txt
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install test dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Check Django configuration and migrations
+        run: |
+          python crm/manage.py check
+          python crm/manage.py makemigrations --check --dry-run
+      - name: Test Django with PostgreSQL
+        env:
+          PGPASSWORD: kinshore-ci-only
+        run: python crm/manage.py test reception --settings=config.postgres_tests
+      - name: Test Telegram bot and Mini App
+        run: |
+          python -m unittest discover -s bot
+          node site/test_miniapp.js
+      - name: Install Chromium
+        run: python -m playwright install --with-deps chromium
+      - name: Test the guest and reception workflow
+        run: python site/check_guest_route.py
+      - name: Build the public demo archive
+        run: python deploy/package_public.py "$RUNNER_TEMP/kinshore-demo.zip"

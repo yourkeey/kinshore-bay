@@ -1,0 +1,62 @@
+{% extends "desk/base.html" %}
+{% block title %}Request {{ stay.reference }}{% endblock %}
+{% block content %}
+<p><a href="{% url 'desk-today' %}">Back to today</a></p>
+<h1>Request {{ stay.reference }}</h1>
+<section>
+  <h2>{{ stay.apartment.category.name }}</h2>
+  <dl class="details">
+    <div><dt>Status</dt><dd>{{ stay.get_status_display }}</dd></div>
+    <div><dt>Apartment</dt><dd>{{ stay.apartment.code }}</dd></div>
+    <div><dt>Arrival</dt><dd>{{ stay.checkin|date:"j M Y" }}</dd></div>
+    <div><dt>Departure</dt><dd>{{ stay.checkout|date:"j M Y" }}</dd></div>
+    <div><dt>Guests</dt><dd>{{ stay.guests }}</dd></div>
+    <div><dt>Children under 18</dt><dd>{{ stay.children|default_if_none:"Not provided" }}</dd></div>
+    <div><dt>Bringing a pet</dt><dd>{{ stay.with_pet|yesno:"Yes,No,Not provided" }}</dd></div>
+    <div><dt>Arriving by car</dt><dd>{{ stay.by_car|yesno:"Yes,No,Not provided" }}</dd></div>
+    <div><dt>Stay total</dt><dd>€{{ total|floatformat:2 }}</dd></div>
+  </dl>
+  {% if stay.with_pet and stay.status == "requested" %}
+    <p>Check whether the assigned apartment can accommodate the pet before confirming.</p>
+  {% endif %}
+</section>
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+{% if perms.reception.change_stayrequest and actions %}
+<section>
+  <h2>Update request</h2>
+  {% if stay.status == "requested" and not assigned_available %}
+    <p class="error">{{ stay.apartment.code }} is already booked for these dates.</p>
+    {% if not free %}<p>No apartments in this category are free for these dates.</p>{% endif %}
+  {% endif %}
+  <form class="actions" method="post">
+    {% csrf_token %}
+    {% if stay.status == "requested" and free %}
+    <label>Available apartment
+      <select name="unit">
+        {% for unit in free %}
+        <option {% if unit.pk == stay.apartment_id %}selected{% endif %}>{{ unit.code }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <button name="status" value="confirmed">Confirm</button>
+    {% endif %}
+    {% if "checked_in" in actions %}<button name="status" value="checked_in">Check in</button>{% endif %}
+    {% if "checked_out" in actions %}<button name="status" value="checked_out">Check out</button>{% endif %}
+    {% if "cancelled" in actions %}<button class="destructive" name="status" value="cancelled">Cancel request</button>{% endif %}
+  </form>
+</section>
+{% endif %}
+<section>
+  <h2>History</h2>
+  <ol>
+    {% for event in history %}
+    <li>
+      {{ event.created_at|date:"j M Y H:i T" }} · {{ event.actor.username|default:"System" }} ·
+      {{ event.get_previous_display }} → {{ event.get_current_display }} · {{ event.previous_unit }}
+      {% if event.previous_unit != event.current_unit %} → {{ event.current_unit }}{% endif %}
+    </li>
+    {% endfor %}
+    <li>{{ stay.created_at|date:"j M Y H:i T" }} · Request received</li>
+  </ol>
+</section>
+{% endblock %}

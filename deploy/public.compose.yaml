@@ -1,0 +1,65 @@
+name: kinshore-public-demo
+services:
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kinshore_demo
+      POSTGRES_USER: kinshore_demo
+      POSTGRES_PASSWORD: ${KINSHORE_POSTGRES_PASSWORD:?Set the public database password}
+    volumes:
+      - db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "kinshore_demo", "-d", "kinshore_demo"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DJANGO_SETTINGS_MODULE: config.public_demo
+      KINSHORE_DEMO_HOST: ${KINSHORE_DEMO_HOST:?Set the public domain}
+      KINSHORE_SECRET_KEY: ${KINSHORE_SECRET_KEY:?Set a dedicated Django secret}
+      POSTGRES_DB: kinshore_demo
+      POSTGRES_USER: kinshore_demo
+      POSTGRES_PASSWORD: ${KINSHORE_POSTGRES_PASSWORD:?Set the public database password}
+    command:
+      - /bin/sh
+      - -ec
+      - |
+        python manage.py migrate --noinput
+        python manage.py seed_demo
+        python manage.py setup_public_demo
+        python manage.py clear_public_demo
+        exec gunicorn --workers 2 --bind 0.0.0.0:8000 config.wsgi:application
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os; from urllib.request import Request, urlopen; urlopen(Request('http://127.0.0.1:8000/content/en.json', headers={'Host': os.environ['KINSHORE_DEMO_HOST'], 'X-Forwarded-Proto': 'https'}), timeout=3).close()"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+  edge:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      web:
+        condition: service_healthy
+    environment:
+      KINSHORE_DEMO_HOST: ${KINSHORE_DEMO_HOST:?Set the public domain}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - certificates:/data
+volumes:
+  db:
+  certificates:

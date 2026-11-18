@@ -1,0 +1,49 @@
+{% extends "desk/base.html" %}
+{% block title %}Today{% endblock %}
+{% block content %}
+<p>{{ day|date:"l, j F Y" }} · UTC</p>
+<h1>Today at reception</h1>
+<form method="get">
+  <label for="reference">Request reference</label>
+  <div class="bar">
+    <input id="reference" name="q" value="{{ q }}" maxlength="32">
+    <button>Search</button>
+    {% if q %}<a href="{% url 'desk-today' %}">Clear search</a>{% endif %}
+  </div>
+</form>
+{% for title, rows in sections %}
+<section>
+  <h2 id="section-{{ forloop.counter }}">{{ title }}</h2>
+  {% if rows %}
+  <div class="scroll" role="region" aria-labelledby="section-{{ forloop.counter }}" tabindex="0">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Request</th>
+          <th scope="col">Apartment</th>
+          <th scope="col">Arrival</th>
+          <th scope="col">Departure</th>
+          <th scope="col">Guests</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for stay in rows %}
+        <tr>
+          <th scope="row"><a href="{% url 'desk-detail' stay.reference %}">{{ stay.reference }}</a></th>
+          <td>{{ stay.apartment.code }}</td>
+          <td>{{ stay.checkin|date:"j M Y" }}</td>
+          <td>{{ stay.checkout|date:"j M Y" }}</td>
+          <td>{{ stay.guests }}{% if stay.children %} · {{ stay.children }} children{% endif %}{% if stay.with_pet %} · Pet{% endif %}{% if stay.by_car %} · By car{% endif %}</td>
+          <td>{{ stay.get_status_display }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="muted">No requests to display.</p>
+  {% endif %}
+</section>
+{% endfor %}
+{% endblock %}

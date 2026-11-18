@@ -1,0 +1,3 @@
+-r crm/requirements.txt
+playwright==1.60.0
+psycopg[binary]==3.3.9

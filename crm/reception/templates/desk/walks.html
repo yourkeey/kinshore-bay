@@ -1,0 +1,52 @@
+{% extends "desk/base.html" %}
+{% block title %}Walks{% endblock %}
+{% block content %}
+<h1>Club walks</h1>
+<form method="get" class="actions">
+  <label>Session date <input type="date" name="day" value="{{ day|date:'Y-m-d' }}" required></label>
+  <button>Show session</button>
+</form>
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+{% if session %}
+  <section aria-labelledby="walk-heading">
+    <h2 id="walk-heading">{{ title }}</h2>
+    <p>{{ session.day|date:'l, j F Y' }} · Starts at {{ starts_at|time:'H:i' }}</p>
+    <p>Meet at {{ meeting_point }} at {{ meeting_at|time:'H:i' }}.</p>
+    {% if session.cancelled %}<p class="error"><strong>Walk cancelled</strong></p>{% endif %}
+    <p><strong>{{ session.reserved }} of {{ session.capacity }} places reserved</strong></p>
+    {% if bookings %}
+      <div class="scroll" role="region" aria-label="Participants by stay" tabindex="0">
+        <table aria-label="Walk reservations">
+          <thead><tr><th scope="col">Reference</th><th scope="col">Apartment</th><th scope="col">Adults 18+</th><th scope="col">Ages 16–17</th><th scope="col">Ages 6–15</th></tr></thead>
+          <tbody>
+            {% for booking in bookings %}
+              <tr>
+                <th scope="row"><a href="{% url 'desk-detail' booking.stay.reference %}">{{ booking.stay.reference }}</a></th>
+                <td>{{ booking.stay.apartment.code }}</td>
+                <td>{{ booking.adults }}</td>
+                <td>{{ booking.teens }}</td>
+                <td>{{ booking.children }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p>No reservations for this walk.</p>
+    {% endif %}
+    {% if can_cancel and perms.reception.change_stayrequest %}
+      <details>
+        <summary>Cancel this walk</summary>
+        <p>Guests will see the cancellation in My stay. Their accommodation stays confirmed.</p>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="day" value="{{ session.day|date:'Y-m-d' }}">
+          <button class="destructive" name="action" value="cancel">Confirm walk cancellation</button>
+        </form>
+      </details>
+    {% endif %}
+  </section>
+{% elif day %}
+  <p>Walks run on Saturdays. There is no session on {{ day|date:'j F Y' }}.</p>
+{% endif %}
+{% endblock %}

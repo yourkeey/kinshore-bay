@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Reception{% endblock %} · Kinshore Bay</title>
+  {% include "desk/style.html" %}
+</head>
+<body>
+  <header>
+    <nav aria-label="Reception">
+      <strong>Kinshore Bay</strong>
+      {% if user.is_authenticated %}
+        <a href="{% url 'desk-today' %}">Today</a>
+        <a href="{% url 'desk-calendar' %}">Occupancy</a>
+        <a href="{% url 'desk-walks' %}">Walks</a>
+        <a href="{% url 'desk-grills' %}">Grill pergolas</a>
+        <a href="/site/miniapp.html#my-stay">Guest My stay</a>
+        <form action="{% url 'desk-logout' %}" method="post">
+          {% csrf_token %}
+          <button>Sign out</button>
+        </form>
+      {% endif %}
+    </nav>
+  </header>
+  <main>{% block content %}{% endblock %}</main>
+</body>
+</html>

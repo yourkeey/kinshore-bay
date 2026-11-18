@@ -1,0 +1,35 @@
+name: kinshore-bay
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    environment:
+      KINSHORE_SECRET_KEY: ${KINSHORE_SECRET_KEY:?Set KINSHORE_SECRET_KEY for the preview}
+    ports:
+      - "127.0.0.1:8876:8000"
+    volumes:
+      - data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    command:
+      - /bin/sh
+      - -ec
+      - |
+        python manage.py migrate --noinput
+        python manage.py seed_demo --shift
+        exec gunicorn --workers 1 --bind 0.0.0.0:8000 config.wsgi:application
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/content/en.json', timeout=3).close()"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    logging:
+      options:
+        max-size: "5m"
+        max-file: "2"
+volumes:
+  data:

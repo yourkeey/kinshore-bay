@@ -1,0 +1,28 @@
+.env
+.env.*
+!.env.example
+/bot.env
+/preview.env
+/public.env
+/preview-login.txt
+.pgpass
+pgpass.conf
+__pycache__/
+*.py[cod]
+/ChatExport_*/
+Grand Family Apartments.html
+Grand Family Apartments_files/
+crm/data/
+.venv/
+*.sqlite3
+*.sqlite3-*
+bot/data/
+.ssh/
+*.pem
+*.key
+*.ppk
+/.agents/skills/
+/.codex-attachments/
+/grand-family-apartments-info/
+/release/
+/.coverage

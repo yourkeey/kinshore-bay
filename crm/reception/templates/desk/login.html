@@ -1,0 +1,13 @@
+{% extends "desk/base.html" %}
+{% block title %}Staff sign in{% endblock %}
+{% block content %}
+<section class="login">
+  <h1>Staff sign in</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="next" value="{{ next }}">
+    <button>Sign in</button>
+  </form>
+</section>
+{% endblock %}

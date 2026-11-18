@@ -1,0 +1,8 @@
+services:
+  web:
+    environment:
+      KINSHORE_UPSTREAM_IP: ${KINSHORE_UPSTREAM_IP:?Set the private interface IP}
+    ports:
+      - "${KINSHORE_UPSTREAM_IP:?Set the private interface IP}:8876:8000"
+  edge:
+    profiles: [direct-https]

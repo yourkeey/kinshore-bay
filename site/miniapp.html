@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f6f0">
+  <title>Plan your stay · Kinshore Bay</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./apartment-details.js" defer></script>
+  <script src="./club-guide.js" defer></script>
+  <script src="./miniapp.js" defer></script>
+</head>
+<body class="mini-body">
+  <a class="skip-link" href="#planner-title">Skip to stay planner</a>
+  <div class="mini-shell">
+    <div class="mini-demo">Fictional resort · Interactive portfolio demo</div>
+    <header class="mini-header">
+      <a class="mini-back" href="./index.html#apartments">← Apartments</a>
+      <a class="mini-brand" href="./index.html" aria-label="Kinshore Bay home"><span class="brand-symbol" aria-hidden="true"></span><span>kinshore <em>bay</em></span></a>
+      <a class="stay-jump" href="#my-stay">My stay</a>
+    </header>
+    <main class="mini-content">
+      <h1 id="planner-title" tabindex="-1">Plan your <i>stay.</i></h1>
+      <p class="planner-intro">Check which apartments fit your dates and guests. Reception reviews each demo request.</p>
+      <div class="planner-layout">
+        <form id="finder" class="finder" aria-labelledby="finder-title">
+          <h2 id="finder-title">Your trip</h2>
+          <button type="button" class="date-picker-trigger" id="open-calendar" aria-haspopup="dialog" aria-controls="calendar-dialog">
+            <span><small>Check-in</small><strong id="checkin-display">Select date</strong></span>
+            <span class="date-arrow" aria-hidden="true">→</span>
+            <span><small>Check-out</small><strong id="checkout-display">Select date</strong></span>
+          </button>
+          <input id="checkin" name="checkin" type="hidden">
+          <input id="checkout" name="checkout" type="hidden">
+          <div class="finder-bottom">
+            <label>Guests
+              <select id="guests" name="guests">
+                <option value="1">1 guest</option><option value="2" selected>2 guests</option>
+                <option value="3">3 guests</option><option value="4">4 guests</option>
+                <option value="5">5 guests</option><option value="6">6 guests</option>
+              </select>
+            </label>
+            <label>Budget per night
+              <select id="budget" name="budget">
+                <option value="any">Any budget</option><option value="120">Up to €120</option>
+                <option value="160">Up to €160</option><option value="220">Up to €220</option>
+              </select>
+            </label>
+          </div>
+          <label class="room-select">Apartment
+            <select id="category"><option value="">All apartments</option></select>
+          </label>
+          <button class="button button-dark finder-submit" type="submit">See available apartments <span aria-hidden="true">↗</span></button>
+        </form>
+
+        <div class="planner-output">
+          <section id="results" aria-labelledby="results-title">
+            <div class="results-heading"><h2 id="results-title" tabindex="-1">Available apartments</h2></div>
+            <p id="result-summary" class="result-summary" role="status">Loading apartments…</p>
+            <div id="mini-cards"></div>
+          </section>
+
+          <section id="my-stay" aria-labelledby="my-stay-title">
+            <div class="results-heading">
+              <h2 id="my-stay-title" tabindex="-1">My stay</h2>
+              <button type="button" id="refresh-stay">Refresh my requests</button>
+            </div>
+            <p id="request-message" role="status"></p>
+            <div id="stay-list">Loading your requests…</div>
+            <p><a class="secondary-action" href="../reception/">Open demo reception</a></p>
+          </section>
+        </div>
+      </div>
+      <p class="mini-disclosure">Demo availability and prices. Images are AI-generated.</p>
+    </main>
+  </div>
+
+  <dialog id="trip-dialog" class="calendar-dialog" aria-labelledby="trip-title" aria-describedby="trip-summary">
+    <div class="calendar-head">
+      <h2 id="trip-title">Before you send</h2>
+      <button type="button" class="calendar-close" id="trip-close" aria-label="Close stay details">×</button>
+    </div>
+    <p id="trip-summary" class="trip-summary"></p>
+    <form id="trip-details" method="post" action="/api/guest/stays/" aria-labelledby="trip-title">
+      <label class="trip-count" for="trip-children">Children under 18
+        <select id="trip-children" name="children" aria-describedby="trip-children-hint" autofocus></select>
+      </label>
+      <p id="trip-children-hint" class="trip-hint">Count children as part of the guest total. At least one guest must be an adult.</p>
+      <fieldset>
+        <legend>Arrival details</legend>
+        <label class="trip-choice"><input type="checkbox" id="trip-pet" name="with_pet" aria-describedby="trip-pet-hint"> Bringing a pet</label>
+        <p class="trip-hint" id="trip-pet-hint">Reception checks whether the apartment can accommodate your pet before confirming.</p>
+        <label class="trip-choice"><input type="checkbox" id="trip-car" name="by_car" aria-describedby="trip-car-hint"> Arriving by car</label>
+        <p class="trip-hint" id="trip-car-hint">Guest parking is included. Covered bays are first come, first served.</p>
+      </fieldset>
+      <button type="submit" class="button button-dark">Send demo request</button>
+    </form>
+  </dialog>
+
+  <dialog id="calendar-dialog" class="calendar-dialog" aria-labelledby="calendar-title" aria-describedby="calendar-instructions">
+    <div class="calendar-head">
+      <h2 id="calendar-title">Choose your dates</h2>
+      <button type="button" id="calendar-close" class="calendar-close" aria-label="Close calendar">×</button>
+    </div>
+    <p id="calendar-instructions" class="calendar-instructions" role="status">Select your check-in date.</p>
+    <div class="calendar-nav">
+      <button type="button" id="calendar-prev" aria-label="Previous month">‹</button>
+      <strong id="calendar-month" aria-live="polite"></strong>
+      <button type="button" id="calendar-next" aria-label="Next month">›</button>
+    </div>
+    <div class="calendar-weekdays" aria-hidden="true"><span>MO</span><span>TU</span><span>WE</span><span>TH</span><span>FR</span><span>SA</span><span>SU</span></div>
+    <div id="calendar-grid" class="calendar-grid" aria-label="Choose a date"></div>
+    <div class="calendar-bottom"><span>Up to 90 nights</span><button type="button" id="calendar-reset">Start over</button></div>
+  </dialog>
+</body>
+</html>

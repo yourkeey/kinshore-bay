@@ -1,0 +1,60 @@
+{
+  "brand": {
+    "name": "Kinshore Bay",
+    "descriptor": "Family Resort",
+    "tagline": "More room to be together.",
+    "disclosure": "Kinshore Bay is a fictional portfolio project. Images, prices and availability are illustrative."
+  },
+  "site": {
+    "hero": {
+      "eyebrow": "Family apartments by the sea",
+      "headline": "More room to be together.",
+      "body": "Unhurried mornings, sunlit apartments and space to make memories by the water.",
+      "primary_action": "Explore apartments",
+      "secondary_action": "Discover the resort"
+    },
+    "apartments": {
+      "heading": "Find your place in the sun",
+      "body": "From a cosy studio to a two-bedroom retreat, find room for the people who matter most."
+    },
+    "resort": {
+      "heading": "A little world by the water",
+      "body": "Five low-rise apartment buildings sit among gardens and pools, a short walk from a sandy beach.",
+      "features": ["Five apartment buildings", "Swimming pools", "Garden paths", "A beach nearby"]
+    },
+    "gallery": {"heading": "A glimpse of Kinshore Bay", "body": "A closer look at the spaces imagined for slow days by the sea."},
+    "map": {"heading": "Find your way to Kinshore Bay", "disclosure": "Illustrative map. Kinshore Bay is a fictional place."},
+    "faq": [
+      {"question": "Is Kinshore Bay a real resort?", "answer": "No. Kinshore Bay is a fictional resort created for a portfolio project."},
+      {"question": "Can I book a stay?", "answer": "Not at the moment. The apartment selection and price estimates are part of a demonstration; no reservations or payments are accepted."},
+      {"question": "Are the prices and availability real?", "answer": "No. All prices are illustrative, and the demo does not check live availability."},
+      {"question": "What kinds of apartments are featured?", "answer": "The demo includes a studio, a one-bedroom apartment and a two-bedroom family apartment."}
+    ]
+  },
+  "apartments": [
+    {
+      "id": "studio", "name": "Garden Studio", "size": 32, "guests": 2, "price": 90,
+      "description": "A bright studio with a balcony overlooking the gardens.",
+      "image": "garden-studio-warm.webp", "outlook": "Garden-facing balcony",
+      "sleeping": "One double bed in an open-plan studio.",
+      "kitchen": "Two-ring hob, under-counter fridge, microwave and kettle.",
+      "layout": [["Balcony", "Garden side"], ["Studio", "Double bed"], ["Kitchenette", "Table for two"], ["Bathroom", "Shower"]]
+    },
+    {
+      "id": "one", "name": "Poolside One Bedroom", "size": 45, "guests": 4, "price": 135,
+      "description": "A separate bedroom and a living space near the pool.",
+      "image": "kinshore-apartment.webp", "outlook": "Pool-facing balcony",
+      "sleeping": "A private double bedroom and a double sofa bed in the living room.",
+      "kitchen": "Induction hob, microwave, fridge-freezer, kettle and cookware.",
+      "layout": [["Balcony", "Pool side"], ["Bedroom", "Double bed"], ["Living room", "Double sofa bed"], ["Kitchen", "Dining table for four"], ["Bathroom", "Shower"]]
+    },
+    {
+      "id": "family", "name": "Family Two Bedroom", "size": 65, "guests": 6, "price": 190,
+      "description": "Two bedrooms, a kitchen and room for the whole family.",
+      "image": "family-twin-bedroom.webp", "outlook": "Garden-facing terrace",
+      "sleeping": "Two separate bedrooms and a double sofa bed in the living room.",
+      "kitchen": "Induction hob, oven, microwave, fridge-freezer and cookware.",
+      "layout": [["Main bedroom", "Double bed"], ["Second bedroom", "Two single beds"], ["Living room", "Double sofa bed"], ["Kitchen", "Dining table for six"], ["Bathroom", "Shower"], ["Terrace", "Garden side"]]
+    }
+  ]
+}

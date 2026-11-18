@@ -1,0 +1,45 @@
+{% extends "desk/base.html" %}
+{% block title %}Occupancy{% endblock %}
+{% block content %}
+<h1>Occupancy calendar</h1>
+<form method="get">
+  <label for="start">Week starting</label>
+  <div class="bar">
+    <input id="start" type="date" name="start" value="{{ start|date:'Y-m-d' }}" required>
+    <button>Show week</button>
+  </div>
+</form>
+{% if error %}
+<p class="error" role="alert">{{ error }}</p>
+{% else %}
+<section>
+  <h2 id="week">{{ days.0|date:"j M" }} – {{ days.6|date:"j M Y" }}</h2>
+  <div class="scroll" tabindex="0" role="region" aria-labelledby="week">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Apartment</th>
+          {% for day in days %}<th scope="col">{{ day|date:"D j" }}</th>{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for unit, cells in rows %}
+        <tr>
+          <th scope="row">{{ unit.code }}</th>
+          {% for stay in cells %}
+          <td>
+            {% if stay %}
+            <a href="{% url 'desk-detail' stay.reference %}">{{ stay.reference }}</a>
+            {% else %}
+            <span class="muted">Free</span>
+            {% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

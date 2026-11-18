@@ -1,0 +1,29 @@
+services:
+  web:
+    environment:
+      KINSHORE_CRM_USER: ${KINSHORE_CRM_USER:?Set the bot service account}
+      KINSHORE_CRM_TOKEN: ${KINSHORE_CRM_TOKEN:?Set the bot service token}
+  bot:
+    build:
+      context: ..
+      dockerfile: deploy/bot.Dockerfile
+    restart: unless-stopped
+    # Share only the web container's network namespace so CRM remains on loopback.
+    network_mode: "service:web"
+    depends_on:
+      web:
+        condition: service_healthy
+        restart: true
+    env_file: ../../../bot.env
+    environment:
+      CRM_API_URL: http://127.0.0.1:8000/api/internal/demo-requests/
+      CRM_API_TOKEN: ${KINSHORE_CRM_TOKEN:?Set the bot service token}
+    read_only: true
+    volumes:
+      - bot-drafts:/app/bot/data
+    logging:
+      options:
+        max-size: "5m"
+        max-file: "2"
+volumes:
+  bot-drafts:

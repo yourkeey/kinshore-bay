@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore Kinshore Bay, a fictional Mediterranean family resort. Compare apartments and plan a demo stay.">
+  <title>A weekend at Kinshore Bay</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./apartment-details.js" defer></script>
+  <script src="./club-guide.js" defer></script>
+  <script src="./site.js" defer></script>
+</head>
+<body class="guest-home">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="demo-banner">Fictional resort · Interactive portfolio demo</div>
+  <header class="header wrap" id="top">
+    <a class="brand" href="#top" aria-label="Kinshore Bay home">
+      <span class="brand-symbol" aria-hidden="true"></span>
+      <span>kinshore <em>bay</em><small>FAMILY RESORT</small></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#apartments">Apartments</a>
+      <a href="#club">The club</a>
+      <a href="#saturday">Saturday</a>
+    </nav>
+    <a class="header-link" href="./miniapp.html#my-stay">My stay <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="hero-location">Family weekends</p>
+        <h1 id="hero-title">Breakfast outside.<br>Sand by noon.</h1>
+        <p>Settle into an apartment for up to six. On Saturday, walk from the pines down to the shore.</p>
+        <div class="hero-actions">
+          <a class="button button-dark" href="./miniapp.html">Plan your stay <span aria-hidden="true">↗</span></a>
+          <a class="hero-secondary" href="#apartments">Compare apartments <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+      <picture class="hero-visual">
+        <source media="(max-width: 720px)" srcset="./assets/kinshore-weekend-terrace-800.webp">
+        <img class="hero-image" src="./assets/kinshore-weekend-terrace.webp" width="1536" height="1024"
+          fetchpriority="high" alt="Concept view of breakfast on a guest apartment terrace overlooking the pool, pines and sea">
+      </picture>
+    </section>
+
+    <dl class="stay-facts wrap" id="resort" aria-label="A weekend at Kinshore Bay">
+      <div><dt>Friday · from <span data-checkin>15:00</span></dt><dd><a href="#reception">Check in at Reception</a> · <a href="#covered-parking">Parking</a></dd></div>
+      <div><dt><a href="#saturday">Saturday programme</a></dt><dd><a href="#pine-terrace">Meet at Pine terrace</a> at <span data-walk-meeting>09:50</span></dd></div>
+      <div><dt>Sunday · by <span data-checkout>11:00</span></dt><dd>Check out at Reception</dd></div>
+    </dl>
+
+    <section class="apartment-section" id="apartments" aria-labelledby="apartments-title">
+      <div class="wrap">
+        <div class="section-heading">
+          <h2 id="apartments-title">Find your kind of <i>space.</i></h2>
+          <p>Compare beds, kitchen equipment and outdoor space, then check your dates.</p>
+        </div>
+        <p id="catalog-status" role="status">Loading apartments…</p>
+        <button type="button" class="secondary-action" id="retry-catalog" hidden>Try loading apartments again</button>
+        <div class="cards" id="apartment-cards"></div>
+        <p class="image-note">Concept interiors. Nightly rates are per apartment.</p>
+      </div>
+    </section>
+
+    <section class="club-guide wrap" id="club" aria-labelledby="club-title">
+      <div class="section-heading">
+        <h2 id="club-title">Find your way around <i>the club.</i></h2>
+        <p>Find parking when you arrive, lunch between swims or a shady spot by the beach.</p>
+      </div>
+      <div id="map-layers" class="map-layers" role="group" aria-label="Show places on the map"></div>
+      <div class="club-map">
+        <figure id="experience">
+          <div class="map-plan" data-layer="overview">
+            <picture>
+              <source media="(max-width: 720px)" srcset="./assets/kinshore-club-plan-expanded-800.webp">
+              <img src="./assets/kinshore-club-plan-expanded.webp" width="1536" height="1024" loading="lazy"
+                alt="Illustrated plan with the entrance and parking to the left, sports, play and dining along the upper gardens, apartments and pools in the centre and the beach on the right.">
+            </picture>
+            <span id="walk-route" class="map-route" aria-hidden="true" hidden></span>
+            <div id="map-markers"></div>
+          </div>
+          <figcaption>
+            <div>
+              <span>Club grounds · Illustrative plan</span>
+              <small class="map-mobile-hint">Choose a category to see its markers.</small>
+            </div>
+            <button type="button" id="toggle-walk-route" class="secondary-action" aria-controls="walk-route" aria-pressed="false">Show walk route</button>
+          </figcaption>
+        </figure>
+        <div class="map-guide">
+          <div class="map-details" role="status" aria-atomic="true">
+            <h3 id="map-place">Pine &amp; Shore Walk</h3>
+            <p id="directions"></p>
+            <p id="map-note" class="map-place-note" hidden></p>
+            <a id="map-place-link" hidden></a>
+          </div>
+          <div id="map-key"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="weekend-guide wrap" id="saturday" aria-labelledby="saturday-title">
+      <div class="section-heading">
+        <h2 id="saturday-title">Saturday <i>at the club.</i></h2>
+        <p>Join the morning stretch and afternoon games as you are. Book the guided walk in My stay.</p>
+      </div>
+      <ol class="agenda" id="saturday-agenda"></ol>
+      <div class="weekend-options">
+        <div class="weekend-option">
+          <h3>Between swims</h3>
+          <p>Try the shallow end at <a href="#garden-pool">Garden pool</a> or swim lengths at <a href="#main-pool">Main pool</a>. On a wet afternoon, pick a board game in the <a href="#games-room">Games room</a>.</p>
+        </div>
+        <div class="weekend-option weekend-dining">
+          <img src="./assets/kinshore-grill-pergolas.webp" width="1040" height="693" loading="lazy"
+            alt="A timber shelter with a picnic table and a barbecue beside the pine-lined garden path">
+          <div>
+            <h3>Dinner outdoors</h3>
+            <p>Ask Reception for a table at <a href="#bay-kitchen">Bay Kitchen</a> or bring your own food to the <a href="#grill-pergolas">grill pergolas</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="guest-info wrap" id="information" aria-labelledby="information-title">
+      <div>
+        <h2 id="information-title">Good to <i>know.</i></h2>
+        <p>Check-in starts at <span data-checkin>15:00</span> at Reception. Please check out by <span data-checkout>11:00</span>.</p>
+      </div>
+      <div class="questions">
+        <details>
+          <summary>What’s included in the stay?</summary>
+          <p>Your demo price is for the whole apartment.</p>
+          <p data-inclusions></p>
+        </details>
+        <details>
+          <summary>Where can we park?</summary>
+          <p>Drive through the arrival gate. The <a href="#covered-parking">covered bays</a> are on the upper branch of the entrance drive. The <a href="#guest-parking">open guest lot</a> is on the lower branch. Ask reception if you need help finding a bay.</p>
+        </details>
+        <details>
+          <summary>Which apartment fits a family?</summary>
+          <p>Poolside One Bedroom sleeps four with a double bed and a double sofa bed. Choose Family Two Bedroom if you need two separate single beds.</p>
+        </details>
+        <details>
+          <summary>What happens after I send a request?</summary>
+          <p>Save your reference and open My stay in the same browser to check the status. Reception can confirm the demo request.</p>
+        </details>
+        <details>
+          <summary>Can I make a real booking?</summary>
+          <p>Kinshore Bay is a fictional resort. All availability and prices belong to the interactive demo.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <div>
+        <a class="brand footer-brand" href="#top"><span class="brand-symbol" aria-hidden="true"></span><span>kinshore <em>bay</em><small>FAMILY RESORT</small></span></a>
+        <p>Fictional resort · AI-generated visualizations</p>
+      </div>
+      <div><strong>Explore</strong><a href="#apartments">Apartments</a><a href="#club">The club</a><a href="#saturday">Saturday</a><a href="#information">Good to know</a></div>
+      <div><strong>Your stay</strong><a href="./miniapp.html">Plan your stay</a><a href="./miniapp.html#my-stay">My stay</a></div>
+    </div>
+  </footer>
+</body>
+</html>

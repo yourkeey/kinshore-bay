@@ -1,0 +1,55 @@
+{% extends "desk/base.html" %}
+{% block title %}Grill pergolas{% endblock %}
+{% block content %}
+<h1>Grill pergolas</h1>
+<form method="get" class="actions">
+  <label for="grill-day">Date (UTC)
+    <input id="grill-day" type="date" name="day" value="{{ day|date:'Y-m-d' }}" required>
+  </label>
+  <button>Show schedule</button>
+</form>
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+{% if rows %}
+<section aria-labelledby="grill-schedule">
+  <h2 id="grill-schedule">{{ day|date:"l, j F Y" }}</h2>
+  <p class="muted">Two tables. One slot per stay per evening.</p>
+  <div class="scroll" role="region" aria-labelledby="grill-schedule" tabindex="0">
+    <table>
+      <thead><tr><th scope="col">Time</th><th scope="col">Table</th><th scope="col">Status</th><th scope="col">Reservation</th></tr></thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <th scope="row">{{ row.time }}</th>
+          <td>{{ row.table }}</td>
+          <td>{% if row.booking %}Reserved{% elif row.upcoming %}Free{% else %}Closed{% endif %}</td>
+          <td>
+            {% if row.booking %}
+              <a href="{% url 'desk-detail' row.booking.stay.reference %}">{{ row.booking.stay.reference }}</a>
+              · {{ row.booking.stay.apartment.code }}
+            {% endif %}
+            {% if row.upcoming and perms.reception.change_stayrequest %}
+              <form method="post" class="actions">
+                {% csrf_token %}
+                <input type="hidden" name="day" value="{{ day|date:'Y-m-d' }}">
+                {% if row.booking %}
+                  <input type="hidden" name="booking" value="{{ row.booking.pk }}">
+                  <button name="action" value="cancel" class="destructive" aria-label="Release table {{ row.table }} at {{ row.time }}">Release table</button>
+                {% else %}
+                  <input type="hidden" name="slot" value="{{ row.slot }}">
+                  <input type="hidden" name="table" value="{{ row.table }}">
+                  <label>Stay reference
+                    <input name="reference" maxlength="32" size="14" required>
+                  </label>
+                  <button name="action" value="reserve" aria-label="Reserve table {{ row.table }} at {{ row.time }}">Reserve</button>
+                {% endif %}
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
