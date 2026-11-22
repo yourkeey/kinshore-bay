@@ -63,7 +63,7 @@ python -m playwright install chromium
 python site/check_guest_route.py
 ```
 
-The browser suite uses a temporary database and runs the guest-to-reception route at three viewport widths. GitHub Actions also runs PostgreSQL concurrency checks and builds the deployment ZIP. See [local PostgreSQL instructions](crm/README.md#проверка).
+The browser suite uses a temporary database and runs the guest-to-reception route at three viewport widths. GitHub Actions also runs PostgreSQL concurrency checks, builds the deployment ZIP, and starts the packaged public demo with Docker Compose to check that Reception loads. See [local PostgreSQL instructions](crm/README.md#проверка).
 
 ## Credits
 

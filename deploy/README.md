@@ -2,7 +2,7 @@
 
 The Compose project runs Django with Gunicorn and SQLite. It listens on the VPS loopback interface at port 8876. Keep this HTTP configuration behind an SSH tunnel. The local Django preview keeps its own database and settings.
 
-The VPS keeps each Git archive under `~/kinshore-bay/releases/<commit>`. From a release directory, create the shared environment file once and preserve it between releases.
+The VPS keeps each Git archive under `~/kinshore-bay/releases/<commit>`. From a release directory, create the shared environment file once and preserve it between releases. [preview.env.example](preview.env.example) lists the settings for manual setup.
 
 ```sh
 umask 077

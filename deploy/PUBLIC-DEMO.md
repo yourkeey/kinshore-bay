@@ -23,7 +23,7 @@ The archive contains the public runtime and the referenced site images. Extract 
 ## Publish
 
 1. Point the demo hostname to the server and verify that TCP ports 80 and 443 are available. Publish an AAAA record only if the server is reachable on IPv6. Caddy obtains and renews the HTTPS certificate. [Caddy automatic HTTPS](https://caddyserver.com/docs/automatic-https)
-2. Create a public environment file outside the release directory and limit it to its owner. Set `KINSHORE_DEMO_HOST` to the hostname alone. Generate independent random values for `KINSHORE_SECRET_KEY` and `KINSHORE_POSTGRES_PASSWORD`.
+2. For a first deployment, copy [public.env.example](public.env.example) to `../public.env` from the extracted release directory. Set permissions to `0600`, replace `KINSHORE_DEMO_HOST` with your hostname, and generate independent random values for `KINSHORE_SECRET_KEY` and `KINSHORE_POSTGRES_PASSWORD`. Keep the existing environment file on upgrades.
 3. Extract the release into a new directory and validate the configuration before starting it.
 
 ```sh

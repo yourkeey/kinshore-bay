@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   tests:
-    name: Django, Telegram bot, and guest browser
+    name: Django, Telegram bot, guest browser, and Docker
     runs-on: ubuntu-latest
     timeout-minutes: 15
     services:
@@ -60,3 +60,32 @@ jobs:
         run: python site/check_guest_route.py
       - name: Build the public demo archive
         run: python deploy/package_public.py "$RUNNER_TEMP/kinshore-demo.zip"
+      - name: Start the packaged public demo
+        shell: bash
+        run: |
+          release="$RUNNER_TEMP/kinshore-public"
+          unzip -q "$RUNNER_TEMP/kinshore-demo.zip" -d "$release"
+          export KINSHORE_DEMO_HOST=kinshore.example
+          export KINSHORE_SECRET_KEY="$(python -c 'from secrets import token_urlsafe; print(token_urlsafe(48))')"
+          export KINSHORE_POSTGRES_PASSWORD="$(python -c 'from secrets import token_urlsafe; print(token_urlsafe(32))')"
+          export KINSHORE_UPSTREAM_IP=127.0.0.1
+
+          compose() {
+            docker compose --project-name kinshore-ci \
+              --env-file "$release/deploy/public.env.example" \
+              -f "$release/deploy/public.compose.yaml" \
+              -f "$release/deploy/public.proxy.compose.yaml" "$@"
+          }
+
+          cleanup() {
+            if [ "$?" -ne 0 ]; then compose logs --no-color || true; fi
+            compose down --volumes || true
+          }
+          trap cleanup EXIT
+
+          compose config --quiet
+          compose up --build --wait --wait-timeout 120 web
+          curl --fail --silent --show-error --max-time 10 \
+            --header "Host: $KINSHORE_DEMO_HOST" --header 'X-Forwarded-Proto: https' \
+            --output "$RUNNER_TEMP/kinshore-reception.html" http://127.0.0.1:8876/reception/
+          grep --fixed-strings --quiet 'Today at reception' "$RUNNER_TEMP/kinshore-reception.html"

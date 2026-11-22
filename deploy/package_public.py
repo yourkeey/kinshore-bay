@@ -12,7 +12,7 @@ SITE_FILES = (
 RUNTIME_FILES = (
     ".dockerignore", "crm/manage.py", "crm/requirements.txt", "content/en.json",
     "deploy/Dockerfile", "deploy/public.compose.yaml", "deploy/public.proxy.compose.yaml",
-    "deploy/Caddyfile", "deploy/PUBLIC-DEMO.md",
+    "deploy/Caddyfile", "deploy/PUBLIC-DEMO.md", "deploy/public.env.example",
 )
 
 
