@@ -1,5 +1,7 @@
 # Kinshore Bay
 
+[PostgreSQL concurrency test · SELECT FOR UPDATE](https://github.com/yourkeey/kinshore-bay/blob/654edf10c7adc81c3e8c01b87304359588b10f87/crm/reception/test_desk.py#L80-L121) · [Passing GitHub Actions run](https://github.com/yourkeey/kinshore-bay/actions/runs/45025269566)
+
 A booking and reception demo for a fictional Mediterranean family resort. The same stay request connects the guest’s apartment search, the receptionist’s assignment, and the family’s plans in **My stay**.
 
 [Live demo](https://kinshore-bay.scalo.biz/) · [Telegram Mini App](https://t.me/KinshoreBay_app) · [22-second walkthrough](docs/media/kinshore-bay-demo.webm) · [Case study](docs/PORTFOLIO-CASE.md)
